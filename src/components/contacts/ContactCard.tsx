@@ -10,7 +10,8 @@ import {
   Calendar, 
   GraduationCap,
   MessageSquare,
-  Clock
+  Clock,
+  CheckCircle
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 
@@ -18,6 +19,7 @@ interface ContactCardProps {
   contact: Contact;
   onEdit: (contact: Contact) => void;
   onSendEmail: (contact: Contact, type: 'cold' | 'followup') => void;
+  onMarkResponded: (contact: Contact) => void;
 }
 
 const getStatusColor = (status: ContactStatus) => {
@@ -64,7 +66,7 @@ const getRelationshipColor = (relationship: RelationshipStatus) => {
   }
 };
 
-export function ContactCard({ contact, onEdit, onSendEmail }: ContactCardProps) {
+export function ContactCard({ contact, onEdit, onSendEmail, onMarkResponded }: ContactCardProps) {
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -76,6 +78,7 @@ export function ContactCard({ contact, onEdit, onSendEmail }: ContactCardProps) 
 
   const isFollowUpDue = contact.followUpDate && new Date(contact.followUpDate) <= new Date();
   const needsAction = contact.status === ContactStatus.FOLLOW_UP_NEEDED || isFollowUpDue;
+  const canMarkResponded = contact.status === ContactStatus.AWAITING_REPLY;
 
   return (
     <Card className={`h-full transition-all duration-200 hover:shadow-lg ${needsAction ? 'ring-2 ring-warning' : ''}`}>
@@ -136,6 +139,19 @@ export function ContactCard({ contact, onEdit, onSendEmail }: ContactCardProps) 
               <p className="text-sm text-accent line-clamp-2">{contact.aiNotes}</p>
             </div>
           </div>
+        )}
+
+        {/* Mark as Responded button for awaiting reply contacts */}
+        {canMarkResponded && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onMarkResponded(contact)}
+            className="w-full border-success text-success hover:bg-success-light"
+          >
+            <CheckCircle className="h-4 w-4 mr-2" />
+            Mark as Responded
+          </Button>
         )}
 
         <div className="flex space-x-2 pt-2">

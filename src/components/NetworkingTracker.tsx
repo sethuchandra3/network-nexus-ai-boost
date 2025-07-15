@@ -6,7 +6,7 @@ import { EmailGenerator } from "./email/EmailGenerator";
 import { Button } from "@/components/ui/button";
 import { Plus, Users, TrendingUp, Calendar } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { addDays } from "date-fns";
+import { calculateFollowUpDate } from "@/utils/followUpUtils";
 
 export function NetworkingTracker() {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -59,19 +59,48 @@ export function NetworkingTracker() {
   };
 
   const handleEmailSent = (contact: Contact, followUpDate: Date) => {
-    // Update contact status and follow-up date
+    // Update contact status and follow-up date with intelligent follow-up calculation
+    const intelligentFollowUpDate = calculateFollowUpDate(contact.relationshipStatus);
+    
     setContacts(prev => prev.map(c => 
       c.id === contact.id 
         ? { 
             ...c, 
             status: ContactStatus.AWAITING_REPLY,
             lastContacted: new Date(),
-            followUpDate,
+            followUpDate: intelligentFollowUpDate,
             updatedAt: new Date()
           }
         : c
     ));
     setEmailContact(null);
+    
+    toast({
+      title: "Email marked as sent",
+      description: `Follow-up scheduled based on your ${contact.relationshipStatus} relationship level.`,
+    });
+  };
+
+  const handleMarkResponded = (contact: Contact) => {
+    // Update contact to responded status and set new follow-up based on relationship
+    const newFollowUpDate = calculateFollowUpDate(contact.relationshipStatus);
+    
+    setContacts(prev => prev.map(c => 
+      c.id === contact.id 
+        ? { 
+            ...c, 
+            status: ContactStatus.RESPONDED,
+            lastContacted: new Date(),
+            followUpDate: newFollowUpDate,
+            updatedAt: new Date()
+          }
+        : c
+    ));
+    
+    toast({
+      title: "Marked as responded",
+      description: `Next follow-up automatically scheduled based on relationship level.`,
+    });
   };
 
   const handleCancelForm = () => {
@@ -168,6 +197,7 @@ export function NetworkingTracker() {
             contacts={contacts}
             onEditContact={handleEditContact}
             onSendEmail={handleSendEmail}
+            onMarkResponded={handleMarkResponded}
           />
         )}
       </div>

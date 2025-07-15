@@ -10,9 +10,10 @@ interface ContactListProps {
   contacts: Contact[];
   onEditContact: (contact: Contact) => void;
   onSendEmail: (contact: Contact, type: 'cold' | 'followup') => void;
+  onMarkResponded: (contact: Contact) => void;
 }
 
-export function ContactList({ contacts, onEditContact, onSendEmail }: ContactListProps) {
+export function ContactList({ contacts, onEditContact, onSendEmail, onMarkResponded }: ContactListProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [relationshipFilter, setRelationshipFilter] = useState<string>("all");
@@ -164,6 +165,7 @@ export function ContactList({ contacts, onEditContact, onSendEmail }: ContactLis
               contact={contact}
               onEdit={onEditContact}
               onSendEmail={onSendEmail}
+              onMarkResponded={onMarkResponded}
             />
           ))}
         </div>

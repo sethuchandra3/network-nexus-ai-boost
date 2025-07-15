@@ -7,11 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format } from "date-fns";
-import { CalendarIcon, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { X, Clock, Calendar } from "lucide-react";
+import { getFollowUpDescription } from "@/utils/followUpUtils";
 
 interface ContactFormProps {
   contact?: Contact;
@@ -28,23 +26,15 @@ export function ContactForm({ contact, onSave, onCancel }: ContactFormProps) {
     company: contact?.company || '',
     status: contact?.status || ContactStatus.NEW,
     isAlumni: contact?.isAlumni || false,
-    lastContacted: contact?.lastContacted || null,
     relationshipStatus: contact?.relationshipStatus || RelationshipStatus.STRANGER,
-    referral: contact?.referral || '',
     aiNotes: contact?.aiNotes || '',
+    lastContacted: contact?.lastContacted || null,
     followUpDate: contact?.followUpDate || null,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSave(formData as Omit<Contact, 'id' | 'createdAt' | 'updatedAt'>);
-  };
-
-  const handleDateSelect = (date: Date | undefined, field: 'lastContacted' | 'followUpDate') => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: date || null
-    }));
   };
 
   return (
@@ -157,73 +147,34 @@ export function ContactForm({ contact, onSave, onCancel }: ContactFormProps) {
                   <SelectItem value={RelationshipStatus.MENTEE}>Mentee</SelectItem>
                 </SelectContent>
               </Select>
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground mt-1">
+                <Clock className="h-3 w-3" />
+                <span>Auto follow-up: {getFollowUpDescription(formData.relationshipStatus)}</span>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Last Contacted</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !formData.lastContacted && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.lastContacted ? format(formData.lastContacted, "PPP") : "Select date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={formData.lastContacted || undefined}
-                    onSelect={(date) => handleDateSelect(date, 'lastContacted')}
-                    initialFocus
-                    className={cn("p-3 pointer-events-auto")}
-                  />
-                </PopoverContent>
-              </Popover>
+          {(formData.lastContacted || formData.followUpDate) && (
+            <div className="bg-accent-light p-4 rounded-lg space-y-2">
+              <div className="flex items-center space-x-2 text-sm">
+                <Calendar className="h-4 w-4 text-accent" />
+                <span className="font-medium">Current Tracking Info:</span>
+              </div>
+              {formData.lastContacted && (
+                <div className="text-sm text-muted-foreground">
+                  Last contacted: {formData.lastContacted.toLocaleDateString()}
+                </div>
+              )}
+              {formData.followUpDate && (
+                <div className="text-sm text-muted-foreground">
+                  Next follow-up: {formData.followUpDate.toLocaleDateString()}
+                </div>
+              )}
+              <div className="text-xs text-muted-foreground">
+                Dates are automatically updated when you send emails or mark interactions
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label>Follow Up Date</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !formData.followUpDate && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formData.followUpDate ? format(formData.followUpDate, "PPP") : "Select date"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={formData.followUpDate || undefined}
-                    onSelect={(date) => handleDateSelect(date, 'followUpDate')}
-                    initialFocus
-                    className={cn("p-3 pointer-events-auto")}
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="referral">Referral Source</Label>
-            <Input
-              id="referral"
-              value={formData.referral}
-              onChange={(e) => setFormData(prev => ({ ...prev, referral: e.target.value }))}
-              placeholder="How you found this contact"
-            />
-          </div>
+          )}
 
           <div className="flex items-center space-x-2">
             <Switch

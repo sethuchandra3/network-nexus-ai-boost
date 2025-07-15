@@ -9,7 +9,6 @@ export interface Contact {
   isAlumni: boolean;
   lastContacted?: Date;
   relationshipStatus: RelationshipStatus;
-  referral?: string;
   aiNotes?: string;
   followUpDate?: Date;
   createdAt: Date;
