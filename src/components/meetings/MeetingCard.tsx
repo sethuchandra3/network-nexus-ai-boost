@@ -31,7 +31,7 @@ export function MeetingCard({ meeting, onEdit, onDelete }: MeetingCardProps) {
   };
 
   return (
-    <Card className="p-6 hover:shadow-lg transition-shadow">
+    <Card className="p-6 hover:shadow-xl hover:border-primary/30 transition-all duration-300 bg-gradient-card">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">

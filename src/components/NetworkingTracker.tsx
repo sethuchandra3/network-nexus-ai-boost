@@ -201,23 +201,33 @@ export function NetworkingTracker() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="border-b bg-card">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="space-y-1">
-              <h1 className="text-3xl font-bold text-foreground flex items-center space-x-3">
-                <div className="bg-primary p-2 rounded-lg">
-                  <Users className="h-6 w-6 text-primary-foreground" />
+      <div className="relative border-b bg-gradient-to-br from-primary/5 via-accent/5 to-background backdrop-blur-sm">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 opacity-50" />
+        <div className="relative max-w-7xl mx-auto px-6 py-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="space-y-2">
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary to-accent rounded-xl blur-lg opacity-30" />
+                  <div className="relative bg-gradient-to-br from-primary to-accent p-3 rounded-xl shadow-lg">
+                    <Users className="h-7 w-7 text-white" />
+                  </div>
                 </div>
-                <span>Networking Tracker</span>
-              </h1>
-              <p className="text-muted-foreground">
-                Manage your contacts, meetings, and professional connections with AI-powered insights
+                <div>
+                  <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                    Chatter.ai
+                  </h1>
+                  <p className="text-xs text-muted-foreground font-medium">LinkedIn CRM</p>
+                </div>
+              </div>
+              <p className="text-muted-foreground max-w-2xl">
+                Lightweight networking CRM that connects to LinkedIn, logs coffee chats, and tracks relationships—keeping your outreach organized in one place.
               </p>
             </div>
             <Button 
               onClick={() => activeTab === "contacts" ? setShowContactForm(true) : setShowMeetingForm(true)} 
               size="lg"
+              className="bg-gradient-to-r from-primary to-accent hover:shadow-glow transition-all duration-300 border-0"
             >
               <Plus className="h-4 w-4 mr-2" />
               {activeTab === "contacts" ? "Add Contact" : "Add Meeting"}
@@ -227,14 +237,20 @@ export function NetworkingTracker() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-6 py-10">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="mb-8">
-            <TabsTrigger value="contacts" className="flex items-center gap-2">
+          <TabsList className="mb-10 p-1 h-auto bg-card border shadow-sm">
+            <TabsTrigger 
+              value="contacts" 
+              className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-accent data-[state=active]:text-white transition-all duration-300 px-6 py-3"
+            >
               <Users className="h-4 w-4" />
               Contacts
             </TabsTrigger>
-            <TabsTrigger value="meetings" className="flex items-center gap-2">
+            <TabsTrigger 
+              value="meetings" 
+              className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-accent data-[state=active]:text-white transition-all duration-300 px-6 py-3"
+            >
               <Video className="h-4 w-4" />
               Meetings
             </TabsTrigger>
@@ -242,39 +258,48 @@ export function NetworkingTracker() {
 
           <TabsContent value="contacts">
             {contacts.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="bg-primary-light p-6 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
-                  <Users className="h-12 w-12 text-primary" />
+              <div className="text-center py-20">
+                <div className="relative inline-block mb-8">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-accent/30 rounded-full blur-2xl" />
+                  <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 p-8 rounded-full border-2 border-primary/20">
+                    <Users className="h-16 w-16 text-primary" />
+                  </div>
                 </div>
-                <h2 className="text-2xl font-semibold mb-4">Start Building Your Network</h2>
-                <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  Start Building Your Network
+                </h2>
+                <p className="text-muted-foreground mb-12 max-w-xl mx-auto text-lg">
                   Add your first contact to begin tracking your coffee chats, networking events, and professional relationships.
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto mb-8">
-                  <div className="text-center p-4">
-                    <div className="bg-accent-light p-3 rounded-lg w-12 h-12 mx-auto mb-3 flex items-center justify-center">
-                      <Plus className="h-6 w-6 text-accent" />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-12">
+                  <div className="group p-6 rounded-2xl bg-card border hover:border-primary/50 hover:shadow-lg transition-all duration-300">
+                    <div className="bg-gradient-to-br from-accent/10 to-accent/5 p-4 rounded-xl w-14 h-14 mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Plus className="h-7 w-7 text-accent" />
                     </div>
-                    <h3 className="font-semibold">Add Contacts</h3>
-                    <p className="text-sm text-muted-foreground">Track all your networking connections</p>
+                    <h3 className="font-semibold text-lg mb-2">Add Contacts</h3>
+                    <p className="text-sm text-muted-foreground">Track all your networking connections from LinkedIn</p>
                   </div>
-                  <div className="text-center p-4">
-                    <div className="bg-success-light p-3 rounded-lg w-12 h-12 mx-auto mb-3 flex items-center justify-center">
-                      <TrendingUp className="h-6 w-6 text-success" />
+                  <div className="group p-6 rounded-2xl bg-card border hover:border-success/50 hover:shadow-lg transition-all duration-300">
+                    <div className="bg-gradient-to-br from-success/10 to-success/5 p-4 rounded-xl w-14 h-14 mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <TrendingUp className="h-7 w-7 text-success" />
                     </div>
-                    <h3 className="font-semibold">AI Email Generation</h3>
-                    <p className="text-sm text-muted-foreground">Generate personalized outreach emails</p>
+                    <h3 className="font-semibold text-lg mb-2">AI Email Generation</h3>
+                    <p className="text-sm text-muted-foreground">Generate personalized outreach messages</p>
                   </div>
-                  <div className="text-center p-4">
-                    <div className="bg-warning-light p-3 rounded-lg w-12 h-12 mx-auto mb-3 flex items-center justify-center">
-                      <Calendar className="h-6 w-6 text-warning" />
+                  <div className="group p-6 rounded-2xl bg-card border hover:border-warning/50 hover:shadow-lg transition-all duration-300">
+                    <div className="bg-gradient-to-br from-warning/10 to-warning/5 p-4 rounded-xl w-14 h-14 mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Calendar className="h-7 w-7 text-warning" />
                     </div>
-                    <h3 className="font-semibold">Follow-up Tracking</h3>
+                    <h3 className="font-semibold text-lg mb-2">Follow-up Tracking</h3>
                     <p className="text-sm text-muted-foreground">Never miss a follow-up opportunity</p>
                   </div>
                 </div>
-                <Button onClick={() => setShowContactForm(true)} size="lg">
-                  <Plus className="h-4 w-4 mr-2" />
+                <Button 
+                  onClick={() => setShowContactForm(true)} 
+                  size="lg"
+                  className="bg-gradient-to-r from-primary to-accent hover:shadow-glow transition-all duration-300 text-lg px-8 py-6"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
                   Add Your First Contact
                 </Button>
               </div>
@@ -290,30 +315,48 @@ export function NetworkingTracker() {
 
           <TabsContent value="meetings">
             {meetings.length === 0 && contacts.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="bg-primary-light p-6 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
-                  <Video className="h-12 w-12 text-primary" />
+              <div className="text-center py-20">
+                <div className="relative inline-block mb-8">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-accent/30 rounded-full blur-2xl" />
+                  <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 p-8 rounded-full border-2 border-primary/20">
+                    <Video className="h-16 w-16 text-primary" />
+                  </div>
                 </div>
-                <h2 className="text-2xl font-semibold mb-4">Schedule Your First Meeting</h2>
-                <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  Schedule Your First Meeting
+                </h2>
+                <p className="text-muted-foreground mb-12 max-w-xl mx-auto text-lg">
                   Add some contacts first, then schedule meetings to track your coffee chats and networking sessions.
                 </p>
-                <Button onClick={() => setActiveTab("contacts")} size="lg">
-                  <Users className="h-4 w-4 mr-2" />
+                <Button 
+                  onClick={() => setActiveTab("contacts")} 
+                  size="lg"
+                  className="bg-gradient-to-r from-primary to-accent hover:shadow-glow transition-all duration-300 text-lg px-8 py-6"
+                >
+                  <Users className="h-5 w-5 mr-2" />
                   Go to Contacts
                 </Button>
               </div>
             ) : meetings.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="bg-primary-light p-6 rounded-full w-24 h-24 mx-auto mb-6 flex items-center justify-center">
-                  <Video className="h-12 w-12 text-primary" />
+              <div className="text-center py-20">
+                <div className="relative inline-block mb-8">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-accent/30 rounded-full blur-2xl" />
+                  <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 p-8 rounded-full border-2 border-primary/20">
+                    <Video className="h-16 w-16 text-primary" />
+                  </div>
                 </div>
-                <h2 className="text-2xl font-semibold mb-4">Schedule Your First Meeting</h2>
-                <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                  Schedule Your First Meeting
+                </h2>
+                <p className="text-muted-foreground mb-12 max-w-xl mx-auto text-lg">
                   Create meetings with your contacts and track them with Google Meet or Zoom integration.
                 </p>
-                <Button onClick={() => setShowMeetingForm(true)} size="lg">
-                  <Plus className="h-4 w-4 mr-2" />
+                <Button 
+                  onClick={() => setShowMeetingForm(true)} 
+                  size="lg"
+                  className="bg-gradient-to-r from-primary to-accent hover:shadow-glow transition-all duration-300 text-lg px-8 py-6"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
                   Add Your First Meeting
                 </Button>
               </div>

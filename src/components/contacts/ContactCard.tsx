@@ -81,7 +81,7 @@ export function ContactCard({ contact, onEdit, onSendEmail, onMarkResponded }: C
   const canMarkResponded = contact.status === ContactStatus.AWAITING_REPLY;
 
   return (
-    <Card className={`h-full transition-all duration-200 hover:shadow-lg ${needsAction ? 'ring-2 ring-warning' : ''}`}>
+    <Card className={`h-full transition-all duration-300 hover:shadow-xl hover:border-primary/30 bg-gradient-card ${needsAction ? 'ring-2 ring-warning shadow-glow' : ''}`}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-3">
